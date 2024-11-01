@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Bolos de Pote</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            color: #FF6F61;
+            text-align: center;
+        }
+        form {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #FF6F61;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .btn {
+            background-color: #FF6F61;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #ff5b4f;
+        }
+        .delete-btn {
+            background-color: #f44336;
+        }
+        .delete-btn:hover {
+            background-color: #e53935;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: calc(25% - 20px);
+            display: inline-block;
+        }
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Adicionar Bolo de Pote</h1>
+    <form method="POST" action="/">
+        <input type="text" name="flavor" placeholder="Sabor do Bolo" required>
+        <input type="text" name="size" placeholder="Tamanho (ex: pequeno, médio, grande)" required>
+        <input type="text" name="price" placeholder="Preço" required>
+        <input type="number" name="rating" placeholder="Avaliação (0-5)" min="0" max="5">
+        <input type="submit" value="Adicionar" class="btn">
+    </form>
+
+    <h1>Bolos de Pote</h1>
+    <table>
+        <tr>
+            <th>Sabor</th>
+            <th>Tamanho</th>
+            <th>Preço</th>
+            <th>Avaliação</th>
+            <th>Ações</th>
+        </tr>
+        {% if cakes %}
+            {% for cake in cakes %}
+            <tr>
+                <td>{{ cake.flavor }}</td>
+                <td>{{ cake.size }}</td>
+                <td>R$ {{ cake.price }}</td>
+                <td>{{ cake.rating if cake.rating else 'N/A' }}</td>
+                <td class="action-buttons">
+                    <form method="POST" action="./update" style="display: inline;">
+                        <input type="hidden" value="{{ cake.flavor }}" name="old_flavor">
+                        <input type="text" value="{{ cake.flavor }}" name="new_flavor" placeholder="Novo Sabor">
+                        <input type="text" name="new_size" placeholder="Novo Tamanho">
+                        <input type="text" name="new_price" placeholder="Novo Preço">
+                        <input type="number" name="new_rating" placeholder="Nova Avaliação (0-5)" min="0" max="5">
+                        <input type="submit" value="Atualizar" class="btn">
+                    </form>
+                    <form method="POST" action="./delete" style="display: inline;">
+                        <input type="hidden" value="{{ cake.flavor }}" name="flavor">
+                        <input type="submit" value="Excluir" class="btn delete-btn">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Nenhum bolo de pote cadastrado.</td>
+            </tr>
+        {% endif %}
+    </table>
+</body>
+</html>
